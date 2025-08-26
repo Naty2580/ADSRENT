@@ -1,0 +1,18 @@
+<template>
+  <div
+    data-slot="card"
+    :class="[
+      'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border',
+      className,
+    ]"
+    v-bind="attrs"
+  >
+    <slot />
+  </div>
+</template>
+
+<script setup>
+import { useAttrs } from 'vue'
+defineProps({ className: String })
+const attrs = useAttrs()
+</script>
