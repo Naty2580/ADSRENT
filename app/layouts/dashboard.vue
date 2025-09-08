@@ -1,9 +1,11 @@
 <script setup>
 import { useAuthStore } from '~/stores/auth';
+import { useNotificationStore } from '~/stores/notifications';
 import { Home, Upload, Eye, MessageSquare, Settings as SettingsIcon, Shield, Users, Building2, User, Bell, ChevronDown, LogOut, Sun, Moon, Inbox } from 'lucide-vue-next';
 import Button from '~/components/ui/Button.vue';
 
 const authStore = useAuthStore();
+const notificationStore = useNotificationStore();
 const user = computed(() => authStore.user);
 const isLessor = computed(() => authStore.isLessor);
 const isAdmin = computed(() => authStore.isAdmin);
@@ -36,7 +38,18 @@ const navigationItems = computed(() => {
       ...(isLessor.value ? lessorItems : seekerItems),
       ...(isAdmin.value ? adminItems : [])
   ];
+
+
 });
+
+onMounted(() => {
+  notificationStore.startPolling();
+});
+
+onUnmounted(() => {
+  notificationStore.stopPolling();
+});
+
 
 // For dark mode - you can wire this up to a color mode module later
 const isDarkMode = ref(false);
@@ -79,8 +92,20 @@ function toggleDarkMode() { isDarkMode.value = !isDarkMode.value; }
         <header class="bg-card border-b h-20 flex-shrink-0 flex items-center px-6">
           <div class="flex items-center justify-end w-full">
             <div class="flex items-center gap-4">
-              <Button variant="outline" size="sm"><Bell class="h-4 w-4 mr-2" />Notifications</Button>
-              <div class="relative">
+
+
+
+<NuxtLink to="/dashboard/notifications">
+                  <UiButton variant="outline" size="sm" class="relative">
+                    <Bell class="h-4 w-4 mr-2" />
+                    Notifications
+                    <!-- The Unread Count Badge -->
+                    <span v-if="notificationStore.unreadCount > 0" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
+                        {{ notificationStore.unreadCount }}
+                    </span>
+                  </UiButton>
+              </NuxtLink>     
+                       <div class="relative">
                 <button @click="showProfileMenu = !showProfileMenu" class="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                   <img :src="`https://ui-avatars.com/api/?name=${user?.name}&background=random`" class="h-8 w-8 rounded-full" />
                   <div class="hidden md:block text-left">

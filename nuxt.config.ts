@@ -39,12 +39,12 @@ export default defineNuxtConfig({
     // Recommended for projects with VS Code and Volar.
     typeCheck: "build", // This moves type-checking from development time to build time. HUGE performance boost for `npm run dev`.
   },
-
+ 
   app: {
-    head: { 
+    head: {  
       htmlAttrs: { lang: "en" },
       title: "AdissRent - Find Your Next Home",
-      link: [
+      link: [ 
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         {
           rel: "preconnect",
