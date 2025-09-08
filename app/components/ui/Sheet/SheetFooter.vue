@@ -1,5 +1,13 @@
+<!-- src/components/ui/sheet/SheetFooter.vue -->
+<script setup>
+import { cn } from '../utils';
+const props = defineProps({
+  class: String,
+});
+</script>
+
 <template>
-  <div data-slot="sheet-footer" class="mt-auto flex flex-col gap-2 p-4">
+  <div :class="cn('mt-auto flex flex-col gap-2 p-4', props.class)">
     <slot />
   </div>
 </template>

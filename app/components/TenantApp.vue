@@ -13,11 +13,11 @@ const tenantData = ref({
 const unreadMessages = ref(3);
 
 // Helpers
-const getInitials = (name) =>
-  name
-    .split(" ")
-    .map((n) => n[0])
-    .join("");
+// const getInitials = (name) =>
+//   name
+//     .split(" ")
+//     .map((n) => n[0])
+//     .join("");
 </script>
 
 <template>
@@ -35,7 +35,8 @@ const getInitials = (name) =>
                 :alt="tenantData.name"
               />
               <AvatarFallback class="bg-green-600/10 text-green-700">
-                {{ getInitials(tenantData.name) }}
+                <!-- {{ getInitials(tenantData.name) }} -->
+                  name
               </AvatarFallback>
             </Avatar>
             <div>

@@ -7,7 +7,7 @@
       :disabled="disabled"
       :aria-invalid="invalid"
       data-slot="checkbox"
-      class="peer size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none
+      class="peer size-4 shrink-0 rounded-[4px]  shadow-xs transition-shadow outline-none
         border bg-input-background dark:bg-input/30
         focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]
         disabled:cursor-not-allowed disabled:opacity-50

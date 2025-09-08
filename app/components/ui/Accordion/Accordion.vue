@@ -1,11 +1,19 @@
-<script setup>
-defineProps({
-  modelValue: Array,
-})
+<script setup lang="ts">
+import type { AccordionRootEmits, AccordionRootProps } from 'reka-ui'
+import {
+  AccordionRoot,
+
+  useForwardPropsEmits,
+} from 'reka-ui'
+
+const props = defineProps<AccordionRootProps>()
+const emits = defineEmits<AccordionRootEmits>()
+
+const forwarded = useForwardPropsEmits(props, emits)
 </script>
 
 <template>
-  <div data-slot="accordion">
+  <AccordionRoot v-bind="forwarded">
     <slot />
-  </div>
+  </AccordionRoot>
 </template>

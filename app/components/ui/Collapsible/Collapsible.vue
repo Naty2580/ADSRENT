@@ -1,11 +1,9 @@
-<template>
-  <div data-slot="collapsible">
-    <slot />
-  </div>
-</template>
-
+<!-- File: src/components/ui/collapsible/Collapsible.vue -->
 <script setup>
-defineProps({
-  // Optional: you can pass props like `open`, `disabled`, etc. if needed
-})
+import { CollapsibleRoot } from 'radix-vue';
 </script>
+<template>
+  <CollapsibleRoot>
+    <slot />
+  </CollapsibleRoot>
+</template>

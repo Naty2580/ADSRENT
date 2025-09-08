@@ -1,11 +1,10 @@
 <script setup>
-import LoginForm from '~/components/auth/LoginForm.vue';
 
-// Use the 'auth' layout for this page
 definePageMeta({
   layout: 'auth',
   middleware: 'guest',
 });
+ 
 </script>
 
 <template>
@@ -15,12 +14,13 @@ definePageMeta({
       <div class="p-6">
         <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-foreground">
           Sign in to your account
+        
         </h2>
       </div>
 
-      <!-- Form -->
+      <!-- Form --> 
       <div class="p-6 pt-0">
-        <LoginForm />
+        <AuthLoginForm /> 
       </div>
 
       <!-- Footer -->
@@ -33,8 +33,8 @@ definePageMeta({
           >
             Sign up now
           </NuxtLink>
-        </p>
-      </div>
+        </p> 
+      </div> 
     </div>
-  </div>
+  </div> 
 </template>

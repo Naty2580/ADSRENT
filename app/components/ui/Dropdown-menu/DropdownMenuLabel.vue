@@ -1,13 +1,23 @@
+<!-- src/components/ui/dropdown-menu/DropdownMenuLabel.vue -->
+<script setup>
+import { DropdownMenuLabel } from 'radix-vue';
+import { cn } from '../utils';
+
+const props = defineProps({
+  class: String,
+  inset: Boolean,
+});
+</script>
+
 <template>
-  <div
-    data-slot="dropdown-menu-label"
-    class="px-2 py-1.5 text-sm font-medium"
-    :class="inset ? 'pl-8' : ''"
+  <DropdownMenuLabel
+    :data-inset="props.inset ? '' : undefined"
+    :class="cn(
+      'px-2 py-1.5 text-sm font-semibold',
+      props.inset && 'pl-8',
+      props.class,
+    )"
   >
     <slot />
-  </div>
+  </DropdownMenuLabel>
 </template>
-
-<script setup>
-defineProps({ inset: Boolean })
-</script>

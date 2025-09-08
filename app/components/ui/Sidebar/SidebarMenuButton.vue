@@ -1,28 +1,48 @@
 <script setup lang="ts">
-import { useSidebar } from './useSidebar'
-import { computed } from 'vue'
+import type { Component } from 'vue'
+import type { SidebarMenuButtonProps } from './SidebarMenuButtonChild.vue'
+import { reactiveOmit } from '@vueuse/core'
+import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip'
+import SidebarMenuButtonChild from './SidebarMenuButtonChild.vue'
+import { useSidebar } from './utils'
 
-defineProps<{
-  isActive?: boolean
-  tooltip?: string
-}>()
+defineOptions({
+  inheritAttrs: false,
+})
 
-const { state, isMobile } = useSidebar()
+const props = withDefaults(defineProps<SidebarMenuButtonProps & {
+  tooltip?: string | Component
+}>(), {
+  as: 'button',
+  variant: 'default',
+  size: 'default',
+})
 
-const showTooltip = computed(() => state.value === 'collapsed' && !isMobile.value)
+const { isMobile, state } = useSidebar()
+
+const delegatedProps = reactiveOmit(props, 'tooltip')
 </script>
 
 <template>
-  <Tooltip v-if="tooltip && showTooltip">
-    <TooltipTrigger>
-      <button class="peer/menu-button flex w-full items-center gap-2 p-2">
-        <slot />
-      </button>
-    </TooltipTrigger>
-    <TooltipContent side="right" align="center">{{ tooltip }}</TooltipContent>
-  </Tooltip>
-
-  <button v-else class="peer/menu-button flex w-full items-center gap-2 p-2">
+  <SidebarMenuButtonChild v-if="!tooltip" v-bind="{ ...delegatedProps, ...$attrs }">
     <slot />
-  </button>
+  </SidebarMenuButtonChild>
+
+  <Tooltip v-else>
+    <TooltipTrigger as-child>
+      <SidebarMenuButtonChild v-bind="{ ...delegatedProps, ...$attrs }">
+        <slot />
+      </SidebarMenuButtonChild>
+    </TooltipTrigger>
+    <TooltipContent
+      side="right"
+      align="center"
+      :hidden="state !== 'collapsed' || isMobile"
+    >
+      <template v-if="typeof tooltip === 'string'">
+        {{ tooltip }}
+      </template>
+      <component :is="tooltip" v-else />
+    </TooltipContent>
+  </Tooltip>
 </template>

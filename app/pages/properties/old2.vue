@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useSearch } from '~/composables/useSearch.js';
 import FilterSidebar from '~/components/property/FilterSidebar.vue';
-import PropertyCard from '~/components/property/PropertyCard.vue';
+import PropertyCard from '~/components/property/PropertyCard1.vue';
 import PropertyCardSkeleton from '~/components/property/PropertyCardSkeleton.vue';
 import { List, Grip, Filter } from 'lucide-vue-next';
 

@@ -1,87 +1,115 @@
 <script setup>
-import { useForm } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/toTypedSchema';
-import { addPropertySchema } from '~/utils/schemas';
-import FormField from '~/components/ui/FormField.vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useNuxtApp } from '#app';
+import { Upload } from 'lucide-vue-next';
 import PropertyForm from '~/components/lessor/PropertyForm.vue';
-
-import Button from '~/components/ui/Button.vue';
 
 definePageMeta({
   layout: 'dashboard',
-  middleware: ['authed', 'role'], // Apply BOTH middleware
-  roles: ['lister', 'admin'],     // Specify REQUIRED roles
+  middleware: ['authed', 'role'],
+  // Corrected roles to match our application's standard
+  roles: ['lister', 'admin'],
 });
 
 const { $api } = useNuxtApp();
 const router = useRouter();
+const isSubmitting = ref(false); // We'll manage the submitting state here
+const apiError = ref(null); // To pass any API errors back to the form
 
-const { defineField, handleSubmit, errors, isSubmitting } = useForm({
-    validationSchema: toTypedSchema(addPropertySchema),
-    initialValues: {
-        listingType: 'rent',
-        propertyType: 'apartment',
-        currency: 'ETB',
-        isFurnished: false,
-        address: {},
-    }
-});
+/** 
+ * This function is called when the PropertyForm component emits a 'submit' event.
+ * It receives the validated form data and the raw files.
+ * @param {{ formData: object, files: File[] }} payload
+ */
+async function handleCreateProperty(payload) {
+  isSubmitting.value = true;
+  apiError.value = null;
 
-// Define fields for cleaner template binding
-const [title, titleAttrs] = defineField('title');
-const [description, descriptionAttrs] = defineField('description');
-const [listingType, listingTypeAttrs] = defineField('listingType');
-const [propertyType, propertyTypeAttrs] = defineField('propertyType');
-const [price, priceAttrs] = defineField('price');
-const [area, areaAttrs] = defineField('area');
-const [bedrooms, bedroomsAttrs] = defineField('bedrooms');
-const [bathrooms, bathroomsAttrs] = defineField('bathrooms');
-const [region, regionAttrs] = defineField('address.region');
-const [city, cityAttrs] = defineField('address.city');
-const [subcity, subcityAttrs] = defineField('address.subcity');
-const [specificArea, specificAreaAttrs] = defineField('address.specificArea');
+  console.log("Received from form component:", payload);
+
+  // We are not handling file uploads yet, but this is where it would go.
+  // 1. Upload files to get their keys/URLs. 
+  // 2. Add those keys/URLs to the formData.
+  // For now, we'll just submit the form data.
+  //define backendform object
+  
+
+  const formData = payload.formData; // for easier access
+
+// --- THIS IS THE DEFINITIVE MAPPING TO MATCH THE BACKEND ---
+const backendPayload = {
+  // Basic Info
+  title: formData.title,
+  description: formData.description,
+  listing_type: formData.listingType,
+  property_type: formData.propertyType,
+
+  // Pricing (convert to cents/lowest unit)
+  price: formData.price * 100,
+  currency: formData.currency,
+
+  // Specifications
+  area: formData.area,
+  bedrooms: formData.bedrooms,
+  bathrooms: formData.bathrooms,
+  is_furnished: formData.isFurnished, // Convert from checkbox to boolean for backend
+  
+  // Amenities 
+  amenities: formData.amenities,
+
+  // Location
+  address_region: formData.address.region,
+  address_city: formData.address.city,
+  address_subcity: formData.address.subcity,
+  address_specific_area: formData.address.specificArea,
+  
+  // Coordinates
+  latitude: formData.latitude,
+  longitude: formData.longitude,
+  
+  // --- THIS WILL BE ADDED WHEN FILE UPLOADS ARE READY ---
+  // media_keys: [], // Example: ["uploads/key1.jpg", "uploads/key2.png"]
+};
+
+console.log("Payload being sent to backend:", backendPayload);
 
 
-const onSubmit = handleSubmit(async (values) => {
-    // Here we will eventually get the list of uploaded media keys
-    // const mediaKeys = [ ... ];
-    // const payload = { ...values, media_keys: mediaKeys };
-    // const { $api } = useNuxtApp();
-    // await $api.post('/properties', payload);
-    // navigateTo('/dashboard/lessor/listings');
-
-    console.log("Form Submitted:", values);
-    alert('Form submitted! Integration with backend and media uploads is next.');
-});
-
-async function handleCreateProperty(formData) {
   try {
-    // We can add media keys here in the future
-    const newProperty = await $api.post('/properties', formData);
-    console.log('Property created:', newProperty);
+    const newProperty = await $api.post('/lessor/properties', backendPayload); // Assumes you use a dedicated lessor endpoint
+
+    console.log('Property created successfully:', newProperty);
     // Redirect to the listings page on success
     router.push('/dashboard/lessor/listings');
   } catch (error) {
     console.error('Failed to create property:', error);
-    // You could show an error message to the user here
-    alert('Error: Could not create property.');
+    apiError.value = error.response?._data?.message || 'An error occurred. Please try again.';
+  } finally {
+    isSubmitting.value = false;
   }
 }
-
-
 </script>
 
 <template>
-    <div>
-      <h1 class="font-display text-3xl font-bold">Add New Property</h1>
-      <p class="mt-2 text-muted-foreground">Fill in the details below to list your property.</p>
-      
-      <div class="mt-8">
-        <PropertyForm @submit="handleCreateProperty" />
-      </div>
+  <div>
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="font-display text-3xl font-bold flex items-center gap-2">
+        <Upload class="h-6 w-6" />
+        Add  New Property
+      </h1>
+      <p class="mt-2 text-muted-foreground">Fill in the details below to list your property on the marketplace.</p>
     </div>
-  </template>
 
-<style scoped>
-.form-input { @apply block w-full rounded-md border-0 bg-secondary py-1.5 text-foreground shadow-sm ring-1 ring-inset ring-border placeholder:text-muted-foreground focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6; }
-</style>
+    <!-- The Reusable Form Component -->
+    <PropertyForm 
+        :is-submitting="isSubmitting" 
+        @submit="handleCreateProperty" 
+    />
+
+    <!-- We could display the apiError here if we wanted it outside the form card -->
+    <div v-if="apiError" class="mt-4 p-4 bg-destructive/10 text-destructive rounded-md">
+      {{ apiError }}
+    </div>
+  </div>
+</template>

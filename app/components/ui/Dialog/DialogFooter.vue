@@ -1,13 +1,17 @@
+<!-- src/components/ui/dialog/DialogFooter.vue -->
+<script setup>
+import { cn } from '../utils';
+const props = defineProps({
+  class: String,
+});
+</script>
+
 <template>
   <div
-    data-slot="dialog-footer"
-    class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"
-    :class="className"
+    :class="
+      cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', props.class)
+    "
   >
     <slot />
   </div>
 </template>
-
-<script setup>
-defineProps({ className: String })
-</script>

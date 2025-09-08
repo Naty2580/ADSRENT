@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
-defineProps<{ class?: string }>()
+import type { HTMLAttributes } from 'vue'
+import { cn } from '~/lib/utils'
+
+const props = defineProps<{
+  class?: HTMLAttributes["class"]
+}>()
 </script>
 
 <template>
-  <thead :class="cn('[&_tr]:border-b', $props.class)" data-slot="table-header">
+  <thead :class="cn('[&_tr]:border-b', props.class)">
     <slot />
   </thead>
 </template>

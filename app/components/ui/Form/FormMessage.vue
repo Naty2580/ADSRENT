@@ -1,17 +1,16 @@
-<template>
-  <p
-    v-if="error"
-    data-slot="form-message"
-    :id="`${name}-msg`"
-    class="text-destructive text-sm"
-    :class="className"
-  >
-    {{ error }}
-  </p>
-</template>
+<script lang="ts" setup>
+import { ErrorMessage } from 'vee-validate'
+import { toValue } from 'vue'
+import { useFormField } from './useFormField'
 
-<script setup>
-import { useFormField } from '@/components/ui/useFormField.ts'
-const { name, error } = useFormField()
-defineProps({ className: String })
+const { name, formMessageId } = useFormField()
 </script>
+
+<template>
+  <ErrorMessage
+    :id="formMessageId"
+    as="p"
+    :name="toValue(name)"
+    class="text-sm font-medium text-destructive"
+  />
+</template>

@@ -4,71 +4,82 @@
 
 @layer base {
   :root {
+   
     --background: 0 0% 100%;
-    --foreground: 20 14.3% 4.1%; /* Adjusted for better contrast from #333 */
-
+    --foreground: 0 0% 13%; /* #333333 */
     --card: 0 0% 100%;
-    --card-foreground: 20 14.3% 4.1%;
-
+    --card-foreground: 0 0% 13%;
     --popover: 0 0% 100%;
-    --popover-foreground: 20 14.3% 4.1%;
-
+    --popover-foreground: 0 0% 13%;
     --primary: 15 100% 62%; /* #FF6F3C */
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 60 4.8% 95.9%; /* #F7F7F7 */
-    --secondary-foreground: 24 9.8% 10%;
-
-    --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%; /* #666666 */
-
+    --secondary: 0 0% 97%; /* #F7F7F7 */
+    --secondary-foreground: 0 0% 13%;
+    --muted: 0 0% 97%;
+    --muted-foreground: 0 0% 40%; /* #666666 */
     --accent: 109 65% 42%; /* #3A9D23 */
     --accent-foreground: 0 0% 100%;
-
     --destructive: 349 79% 45%; /* #d4183d */
     --destructive-foreground: 0 0% 100%;
-
-    --border: 20 5.9% 90%;
-    --input: 20 5.9% 90%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
     --ring: 15 100% 62%;
-
+    
     --radius: 0.625rem;
+  
+    --background: #ffffff;
+    --foreground: #333333;
+   --font-size: 14px;
+    --font-weight-medium: 500;
+    --font-weight-normal: 400;
+
+    /* Your Custom Brand Colors (from Figma) */
+    --color-orange-primary: #FF6F3C;
+    --color-orange-gradient: #FF914D;
+    --color-green-accent: #3A9D23;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans; /* <-- ensure font-sans is the body default */
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
   }
 
   .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
-
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
-
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
-
+    --background: 0 0% 10%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 100%;
     --primary: 15 100% 62%;
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 12 6.5% 15.1%;
-    --secondary-foreground: 60 9.1% 97.8%;
-
-    --muted: 12 6.5% 15.1%;
-    --muted-foreground: 24 5.4% 63.9%;
-
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 63%;
     --accent: 109 65% 42%;
     --accent-foreground: 0 0% 100%;
-
     --destructive: 349 79% 45%;
     --destructive-foreground: 0 0% 100%;
-    
-    --border: 12 6.5% 15.1%;
-    --input: 12 6.5% 15.1%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
     --ring: 15 100% 62%;
   }
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
   }
+}
+
+body {
+  font-style: 'Inter', sans-serif;
 }

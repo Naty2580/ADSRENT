@@ -1,18 +1,9 @@
-<template>
-  <button
-    data-slot="collapsible-trigger"
-    @click="$emit('toggle')"
-    :aria-expanded="open"
-    :class="className"
-  >
-    <slot />
-  </button>
-</template>
-
+<!-- File: src/components/ui/collapsible/CollapsibleTrigger.vue -->
 <script setup>
-defineProps({
-  open: Boolean,
-  className: String,
-})
-defineEmits(['toggle'])
+import { CollapsibleTrigger } from 'radix-vue';
 </script>
+<template>
+  <CollapsibleTrigger>
+    <slot />
+  </CollapsibleTrigger>
+</template>

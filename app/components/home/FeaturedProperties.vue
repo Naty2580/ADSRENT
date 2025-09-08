@@ -1,37 +1,89 @@
 <script setup>
-import PropertyCard from '../property/PropertyCard.vue';
 import '~/types/api.js';
+import { useAsyncData } from '#imports';
+import Button from '../ui/button/Button.vue';
 
-// --- MOCK DATA ---
-// This will be replaced by a `useFetch` call to our API: GET /api/v1/page-data/home
-const featuredProperties = ref([
-  { id: 1, title: 'Spacious Villa with Garden', listingType: 'rent', price: { amount: '85,000.00', raw: 85000, currency: 'ETB' }, location: { specificArea: 'Bole', city: 'Addis Ababa' }, bedrooms: 4, bathrooms: 5, area: 300, media: [{ id: 1, url: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=2070', type: 'image'}] },
-  { id: 2, title: 'Modern Apartment in CMC', listingType: 'sale', price: { amount: '12,500,000.00', raw: 12500000, currency: 'ETB' }, location: { specificArea: 'CMC', city: 'Addis Ababa' }, bedrooms: 3, bathrooms: 2, area: 150, media: [{ id: 2, url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070', type: 'image'}] },
-  { id: 3, title: 'Cozy Guesthouse in Kazanchis', listingType: 'rent', price: { amount: '45,000.00', raw: 45000, currency: 'ETB' }, location: { specificArea: 'Kazanchis', city: 'Addis Ababa' }, bedrooms: 2, bathrooms: 2, area: 120, media: [{ id: 3, url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070', type: 'image'}] },
-  { id: 4, title: 'Luxury Condominium with Pool', listingType: 'sale', price: { amount: '25,000,000.00', raw: 25000000, currency: 'ETB' }, location: { specificArea: 'Old Airport', city: 'Addis Ababa' }, bedrooms: 4, bathrooms: 4, area: 280, media: [{ id: 4, url: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974', type: 'image'}] },
-]);
+// --- LIVE API FETCH ---
+// We fetch data directly within the component.
+// 'featuredProperties' is a unique key for caching this specific data.
+const { data: featuredProperties, pending, error } = await useAsyncData(
+    'featuredProperties',
+    async () => {
+        const { $api } = useNuxtApp();
+        try {
+            console.log("Fetching featured properties from the API...");
+            
+            // Call the search endpoint with the 'is_featured' flag.
+            // Your backend's pagination might wrap this in a 'data' object.
+            const response = await $api.get('/property-search', {
+                params: {
+                    is_featured: 1,
+                    // You might want to add a 'limit' parameter to your backend
+                    // for efficiency, e.g., limit: 6
+                    limit: 6
+                }
+            });
+            
+            // Your API returns paginated data, so the properties are in the `data` array.
+            // We also map the price field for consistency with our PropertyCard component.
+            return response.data.map(property => {
+                if (property.price && property.price.rawAmount) {
+                    property.price.raw = property.price.rawAmount;
+                }
+                return property;
+            });
+
+        } catch (e) {
+            console.error("Failed to fetch featured properties:", e);
+            return []; // Return an empty array on error to prevent crashes
+        }
+    }
+);
 </script>
 
 <template>
-  <div class="py-12 md:py-20">
-    <div class="text-center">
-      <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-        Featured Properties
-      </h2>
-      <p class="mt-3 max-w-2xl mx-auto text-lg text-muted-foreground">
-        Handpicked properties from our experts. Find your dream home from our popular choices.
-      </p>
+  <section class="py-20 bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Featured Properties</h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">Handpicked properties from our experts. Find your dream home from our popular choices.</p>
+      </div>
+
+      <!-- PENDING (Loading) State -->
+      <div v-if="pending" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <PropertyCardSkeleton v-for="i in 3" :key="`feat-skel-${i}`" />
+      </div>
+      
+      <!-- ERROR State --> 
+      <div v-else-if="error" class="text-center text-destructive">
+          Failed to load featured properties. Please try again later.
+      </div>
+
+      <!-- SUCCESS State -->
+      <div v-else-if="featuredProperties && featuredProperties.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <PropertyCard1 
+            v-for="property in featuredProperties" 
+            :key="property.id"
+            :property="property"
+        />
+      </div>
+
+       <!-- EMPTY State -->
+       <div v-else class="text-center mt-10">
+        <p class="text-muted-foreground">No featured properties are available at the moment.</p>
+      </div>
+      
+      <div class="text-center mt-12">
+        <Button
+          as="NuxtLink"
+          to="/properties"
+          variant="outline"
+          size="lg"
+          class="border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white"
+        >
+          View All Properties
+        </Button>
+      </div>
     </div>
-    <div v-if="featuredProperties && featuredProperties.length > 0" class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <PropertyCard 
-        v-for="property in featuredProperties" 
-        :key="property.id"
-        :property="property"
-      />
-    </div>
-    <div v-else class="text-center mt-10">
-      <!-- We can add a nice skeleton loader here later -->
-      <p class="text-muted-foreground">Loading properties...</p>
-    </div>
-  </div>
+  </section>
 </template>

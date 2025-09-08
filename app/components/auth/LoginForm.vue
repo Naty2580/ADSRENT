@@ -3,8 +3,7 @@ import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { loginSchema } from '~/utils/schemas';
 import { useAuthStore } from '~/stores/auth';
-import Button from '~/components/ui/Button.vue';
-import FormField from '~/components/ui/FormField.vue';
+import Button from '~/components/ui/button/Button.vue';
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -12,9 +11,14 @@ const router = useRouter();
 // General error message for API failures (e.g., "Invalid credentials")
 const apiError = ref(null);
 
+
 // VeeValidate form setup
 const { defineField, handleSubmit, errors, isSubmitting } = useForm({ 
   validationSchema: toTypedSchema(loginSchema),
+  initialValues: {
+    email: '',
+    password: '',
+  },
 });
 
 const [email, emailAttrs] = defineField('email');
@@ -46,7 +50,7 @@ const onSubmit = handleSubmit(async (values) => {
     </div>
 
     <!-- Email Field -->
-    <FormField label="Email Address" :error="errors.email">
+    <UiFormField label="Email Address" :error="errors.email">
       <input
         v-model="email"
         v-bind="emailAttrs"
@@ -55,10 +59,10 @@ const onSubmit = handleSubmit(async (values) => {
         placeholder="you@example.com"
         class="block w-full rounded-md border-0 bg-secondary py-1.5 text-foreground shadow-sm ring-1 ring-inset ring-border placeholder:text-muted-foreground focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
       />
-    </FormField>
+    </UiFormField>
 
     <!-- Password Field -->
-    <FormField label="Password" :error="errors.password">
+    <UiFormField label="Password" :error="errors.password">
       <input
         v-model="password"
         v-bind="passwordAttrs"
@@ -67,11 +71,11 @@ const onSubmit = handleSubmit(async (values) => {
         placeholder="••••••••"
         class="block w-full rounded-md border-0 bg-secondary py-1.5 text-foreground shadow-sm ring-1 ring-inset ring-border placeholder:text-muted-foreground focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
       />
-    </FormField>
+    </UiFormField>
     
     <div class="flex items-center justify-end">
         <div class="text-sm">
-            <NuxtLink to="/auth/forgot-password" class="font-medium text-primary hover:text-primary/80">Forgot password?</NuxtLink>
+            <p  class="font-medium text-primary hover:text-primary/80">Forgot password?</p>
         </div>
     </div>
 

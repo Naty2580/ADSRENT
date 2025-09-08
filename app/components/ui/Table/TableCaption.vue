@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
-defineProps<{ class?: string }>()
+import type { HTMLAttributes } from 'vue'
+import { cn } from '~/lib/utils'
+
+const props = defineProps<{
+  class?: HTMLAttributes["class"]
+}>()
 </script>
 
 <template>
-  <caption :class="cn('text-muted-foreground mt-4 text-sm', $props.class)" data-slot="table-caption">
+  <caption :class="cn('mt-4 text-sm text-muted-foreground', props.class)">
     <slot />
   </caption>
 </template>

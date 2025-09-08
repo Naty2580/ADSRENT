@@ -52,6 +52,7 @@ const baseRegisterSchema = z.object({
   
   export const updateProfileSchema = z.object({
     name: z.string().min(2, 'Name is required'),
+    email: z.string().min(1, 'Email is required').email('Invalid email address'),
     phoneNumber: z.string().min(1, 'Phone number is required'),
     address: z.object({
       region: z.string().min(1, 'Region is required'),
@@ -62,7 +63,7 @@ const baseRegisterSchema = z.object({
   });
 
   export const addPropertySchema = z.object({
-    title: z.string().min(5, 'Title must be at least 5 characters'),
+    title: z.string().min(3, 'Title must be at least 3 characters'),
     description: z.string().min(20, 'Description must be at least 20 characters'),
     listingType: z.enum(['rent', 'sale']),
     propertyType: z.enum(['apartment', 'house', 'office', 'land', 'villa', 'shop', 'condo', 'studio', 'building', 'warehouse', 'guesthouse']),
@@ -79,5 +80,9 @@ const baseRegisterSchema = z.object({
         subcity: z.string().min(1, 'Sub-city is required'),
         specificArea: z.string().min(1, 'Specific area is required'),
     }),
+    amenities: z.array(z.string()).optional(),
     // Media will be handled separately by the uploader, not in this form schema.
   });
+
+  // ... keep other schemas (login, register, etc.)
+

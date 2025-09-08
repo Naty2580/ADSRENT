@@ -1,5 +1,14 @@
+<!-- src/components/ui/sheet/SheetTitle.vue -->
+<script setup>
+import { DialogTitle } from 'radix-vue';
+import { cn } from '../utils';
+const props = defineProps({
+  class: String,
+});
+</script>
+
 <template>
-  <h2 data-slot="sheet-title" class="text-foreground font-semibold">
+  <DialogTitle :class="cn('text-foreground font-semibold', props.class)">
     <slot />
-  </h2>
+  </DialogTitle>
 </template>

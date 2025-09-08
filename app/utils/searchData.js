@@ -40,7 +40,7 @@ export const cities = {
 
 export const subcities = {
   "addis-ababa": [
-    { value: "bole", label: "Bole" },
+    { value: "bole", label: "Bole" }, 
     { value: "yeka", label: "Yeka" },
     { value: "kirkos", label: "Kirkos" },
     { value: "arada", label: "Arada" },
@@ -218,4 +218,26 @@ export const priceOptions = {
   },
 };
 
-export const heroImages = [ { url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop", alt: "Modern villa" }, { url: "https://images.unsplash.com/photo-1577495508048-b635879837f1?w=1920&h=1080&fit=crop", alt: "Luxury apartment" }, { url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1920&h=1080&fit=crop", alt: "Beautiful villa" } ];
+// ... keep regions, subcities, propertyTypes, etc.
+
+// ... (keep all other data)
+
+// New, flat array for amenities
+export const amenities = [
+  { value: 'furnished', label: 'Furnished' },
+  { value: 'swimming_pool', label: 'Swimming Pool' },
+  { value: 'air_conditioning', label: 'Air Conditioning' },
+  { value: 'parking', label: 'Parking' },
+  { value: 'gym', label: 'Gym' },
+  { value: 'internet_wifi', label: 'Internet/WiFi' },
+  { value: 'garden', label: 'Garden' },
+  { value: 'elevator', label: 'Elevator' },
+  { value: 'generator', label: 'Generator' },
+];
+
+export const heroImages = [
+  { url: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1920&h=1080&fit=crop", alt: "Modern white villa with a pool" },
+  { url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1920&h=1080&fit=crop", alt: "Bright and airy modern apartment living room" },
+  { url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=1080&fit=crop", alt: "Elegant family house with a porch" },
+  { url: "https://images.unsplash.com/photo-1592595896551-87e6b4ae8b62?w=1920&h=1080&fit=crop", alt: "Beautiful home with a lush front yard" },
+];

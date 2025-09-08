@@ -1,24 +1,24 @@
-<template>
-  <div>
-    <!-- Hero Section -->
-      <!-- <HomeHeroSearch /> -->
-       <HomeSearchSection />
-    
- 
-    
-          <HomeFeaturedProperties />
-       
->
-      <HomeExploreByCity />
-    
-     
- 
-        <HomeHowItWorks />
-      
- <HomeLessorCTA />
+<script setup>
 
-    <!-- Blog Section -->
-      <HomeBlogSection />
-    
-  </div>
+
+</script>
+<template>
+  <div>  
+    <HomeSearchSection />
+    <HomeFeaturedProperties />
+    <HomeExploreByCity />
+    <HomeHowItWorks />
+    <HomeCallToAction />
+  </div> 
 </template>
+
+<style scoped>
+.bg-background {
+  background-color: #f8fafc;
+}
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* src/assets/main.css */
+</style>

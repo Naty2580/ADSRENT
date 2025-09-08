@@ -97,11 +97,11 @@ const filteredConversations = computed(() =>
   )
 );
 
-const getInitials = (name) =>
-  name
-    .split(" ")
-    .map((n) => n[0])
-    .join("");
+// const getInitials = (name) =>
+//   name
+//     .split(" ")
+//     .map((n) => n[0])
+//     .join("");
 
 const handleConversationSelect = (conversation) => {
   activeConversation.value = conversation;
@@ -153,7 +153,7 @@ const handleSendMessage = () => {
               <AvatarFallback
                 class="bg-green-600/10 text-green-700 font-semibold"
               >
-                {{ getInitials(conversation.leasorName) }}
+                <!-- {{ getInitials(conversation.leasorName) }} -->
               </AvatarFallback>
             </Avatar>
             <div
@@ -213,7 +213,7 @@ const handleSendMessage = () => {
         <Avatar v-if="!message.isMine" class="w-8 h-8 flex-shrink-0">
           <AvatarImage :src="activeConversation.leasorAvatar" />
           <AvatarFallback class="bg-gray-200 text-xs">
-            {{ getInitials(activeConversation.leasorName) }}
+            <!-- {{ getInitials(activeConversation.leasorName) }} -->
           </AvatarFallback>
         </Avatar>
         <div

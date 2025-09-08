@@ -1,18 +1,10 @@
+<!-- File: src/components/ui/card/Card.vue -->
+<script setup>
+import { cn } from '../utils';
+const props = defineProps({ class: String });
+</script>
 <template>
-  <div
-    data-slot="card"
-    :class="[
-      'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border',
-      className,
-    ]"
-    v-bind="attrs"
-  >
+  <div :class="cn('rounded-lg border bg-card text-card-foreground shadow-sm', props.class)">
     <slot />
   </div>
 </template>
-
-<script setup>
-import { useAttrs } from 'vue'
-defineProps({ className: String })
-const attrs = useAttrs()
-</script>

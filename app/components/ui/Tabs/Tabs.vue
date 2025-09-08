@@ -1,22 +1,15 @@
-<script setup lang="ts">
-import { TabsRoot } from '@radix-vue/tabs'
-import { cn } from '@/lib/utils'
+<!-- src/components/ui/tabs/Tabs.vue -->
+<script setup>
+import { TabsRoot } from 'radix-vue';
+import { cn } from '../utils';
 
-const props = defineProps<{
-  class?: string
-  defaultValue?: string
-  value?: string
-  orientation?: 'horizontal' | 'vertical'
-  dir?: 'ltr' | 'rtl'
-}>
+const props = defineProps({
+  class: String,
+});
 </script>
 
 <template>
-  <TabsRoot
-    data-slot="tabs"
-    :class="cn('flex flex-col gap-2', props.class)"
-    v-bind="props"
-  >
+  <TabsRoot :class="cn('flex flex-col gap-2', props.class)">
     <slot />
   </TabsRoot>
 </template>

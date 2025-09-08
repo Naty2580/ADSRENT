@@ -1,24 +1,22 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import type { AccordionItemProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { reactiveOmit } from '@vueuse/core'
+import { AccordionItem, useForwardProps } from 'reka-ui'
+import { cn } from '~/lib/utils'
 
-const props = defineProps({
-  value: String,
-  open: Boolean,
-})
+const props = defineProps<AccordionItemProps & { class?: HTMLAttributes["class"] }>()
 
-const isOpen = ref(props.open ?? false)
+const delegatedProps = reactiveOmit(props, 'class')
 
-function toggle() {
-  isOpen.value = !isOpen.value
-}
+const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
-  <div
-    data-slot="accordion-item"
-    class="border-b last:border-b-0"
+  <AccordionItem
+    v-bind="forwardedProps"
+    :class="cn('border-b', props.class)"
   >
-    <slot name="trigger" :isOpen="isOpen" :toggle="toggle" />
-    <slot name="content" :isOpen="isOpen" />
-  </div>
+    <slot />
+  </AccordionItem>
 </template>

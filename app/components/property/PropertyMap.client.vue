@@ -1,34 +1,34 @@
 <script setup>
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Map, Marker } from 'maplibre-gl';
-import { onMounted, shallowRef } from 'vue';
+import { Map, Marker, Popup } from 'maplibre-gl';
+import { onMounted, shallowRef, watch } from 'vue';
 
-const props = defineProps({
-    longitude: Number,
-    latitude: Number
-});
-
+const props = defineProps({ properties: Array });
 const mapContainer = shallowRef(null);
 const map = shallowRef(null);
 
 onMounted(() => {
-    if (!props.latitude || !props.longitude) return;
-
     map.value = new Map({
         container: mapContainer.value,
-        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=get-your-own-key`, // Replace with your key
-        center: [props.longitude, props.latitude],
-        zoom: 14
+        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=...`, // Add your MapTiler key
+        center: [38.7578, 9.0227], // Default to Addis
+        zoom: 11
     });
 
-    new Marker({color: "#FF6F3C"})
-        .setLngLat([props.longitude, props.latitude])
-        .addTo(map.value);
+    watch(() => props.properties, (newProperties) => {
+        // Clear old markers
+        // Add new markers
+        newProperties.forEach(prop => {
+            if (prop.latitude && prop.longitude) {
+                new Marker({ color: "#FF6F3C" })
+                    .setLngLat([prop.longitude, prop.latitude])
+                    .setPopup(new Popup().setHTML(`<h5>${prop.title}</h5><p>${prop.price.amount} ${prop.price.currency}</p>`))
+                    .addTo(map.value);
+            }
+        });
+    }, { immediate: true });
 });
-
-// For maplibre, you can get a free key from maptiler.com
 </script>
-
 <template>
-    <div ref="mapContainer" class="w-full h-[400px] bg-secondary rounded-lg"></div>
+  <div class="h-[calc(100vh-145px)] w-full" ref="mapContainer"></div>
 </template>

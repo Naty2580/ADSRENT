@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { TooltipTrigger as RadixTooltipTrigger } from '@radix-vue/tooltip'
+import type { TooltipTriggerProps } from 'reka-ui'
+import { TooltipTrigger } from 'reka-ui'
+
+const props = defineProps<TooltipTriggerProps>()
 </script>
 
 <template>
-  <RadixTooltipTrigger data-slot="tooltip-trigger">
+  <TooltipTrigger v-bind="props">
     <slot />
-  </RadixTooltipTrigger>
+  </TooltipTrigger>
 </template>

@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import { TooltipProvider as RadixTooltipProvider } from '@radix-vue/tooltip'
+import type { TooltipProviderProps } from 'reka-ui'
+import { TooltipProvider } from 'reka-ui'
 
-const props = defineProps<{
-  delayDuration?: number
-}>()
+const props = defineProps<TooltipProviderProps>()
 </script>
 
 <template>
-  <RadixTooltipProvider
-    data-slot="tooltip-provider"
-    :delay-duration="props.delayDuration ?? 0"
-  >
+  <TooltipProvider v-bind="props">
     <slot />
-  </RadixTooltipProvider>
+  </TooltipProvider>
 </template>

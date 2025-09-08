@@ -1,6 +1,6 @@
 <script setup>
 // Imports
-import { useForm, useField } from 'vee-validate';
+import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { registerSchema } from '~/utils/schemas';
 import { Eye, EyeOff } from 'lucide-vue-next';
@@ -10,8 +10,11 @@ import {
 } from 'lucide-vue-next';
 import {regions, subcities, cities} from "~/utils/searchData.js";
 
-console.log(regions, subcities, cities);
 
+
+
+
+const router = useRouter();
 const authStore = useAuthStore();
 const isSubmitting = ref(false);
 const isSuccess = ref(false);
@@ -24,7 +27,7 @@ const formData = reactive({
 
 
 // Form Setup with VeeValidate
-const { defineField, errors, values } = useForm({
+const { defineField, errors, values, handleSubmit } = useForm({
   validationSchema: toTypedSchema(registerSchema),
   initialValues: formData,
 });
@@ -66,13 +69,15 @@ const roleOptions = computed(() => [
 ]);
 
 
-const onSubmit = async (formData) => {
+async function handleRegistration(formData) {
+  console.log("Form Data:", formData);
+
     isSubmitting.value = true;
     isSuccess.value = false;
     apiError.value = null;
 
     try {
-
+console.log("Form Data:  inside try ", formData);
     const backendForm = {
       name: formData.name,
       email: formData.email,
@@ -91,20 +96,25 @@ const onSubmit = async (formData) => {
     } else if (formData.type === 'person') {
       backendForm.gender = formData.gender;
     }
+    console.log("Form Data: after form interchange", formData);
     console.log("Form Submitted:", backendForm);
     console.log("recieved form", formData);
-    // await authStore.register(backendForm);
-    //     isSuccess.value = true;
-    //     // Redirect after a short delay to show success message
-    //     setTimeout(() => {
-    //         router.push('/dashboard');
-    //     }, 2000);
+    await authStore.register(backendForm);
+        isSuccess.value = true;
+        // Redirect after a short delay to show success message
+        setTimeout(() => {
+            router.push('/dashboard');
+        }, 2000);
+
     } catch (error) {
         apiError.value = error.message || "An unexpected registration error occurred.";
     } finally {
         isSubmitting.value = false;
     }
 } 
+
+const onSubmit = handleSubmit(handleRegistration);
+
 </script>
 <template>
   <form @submit="onSubmit" class="space-y-4">
@@ -114,7 +124,7 @@ const onSubmit = async (formData) => {
     </div>
 
     <!-- Preference Selection -->
-    <FormField label="Choose Your Role" :error="errors.preference">
+    <UiFormField label="Choose Your Role" :error="errors.preference">
       <div class="grid grid-cols-2 gap-3">
         <div
           v-for="role in roleOptions"
@@ -142,10 +152,10 @@ const onSubmit = async (formData) => {
 
         </div>
       </div>
-    </FormField>
+    </UiFormField>
 
     <!-- Type (Person/Company) -->
-    <FormField label="Account Type" :class="['space-y-4']">
+    <UiFormField label="Account Type" :class="['space-y-4']">
       <div class="grid grid-cols-2 gap-3">
         
           <UiButton
@@ -165,15 +175,15 @@ const onSubmit = async (formData) => {
           </UiButton>
        
       </div>
-    </FormField>
+    </UiFormField>
 
     <!-- Conditional Fields -->
     <template v-if="formData.type === 'person'">
       
-      <FormField label="Name" :error="errors.name">
-        <UiInput v-model="name" v-bind="nameAttrs" type="text" class="form-input" />
-      </FormField>
-      <FormField label="Gender" :error="errors.gender">
+      <UiFormField label="Name" :error="errors.name">
+        <input v-model="name" v-bind="nameAttrs" type="text" class="form-input" />
+      </UiFormField>
+      <UiFormField label="Gender" :error="errors.gender">
         <div class="flex flex-row space-x-6 mt-2">
                           <div class="flex items-center space-x-2">
                             <input type="radio" id="male" value="male" v-model="gender" v-bind="genderAttrs" class="h-4 w-4    text-orange-500 focus:ring-orange-600 border-gray-300" />
@@ -184,28 +194,28 @@ const onSubmit = async (formData) => {
                             <label for="female" class="text-md text-gray-700">Female</label>
                           </div>
                         </div>
-      </FormField>
+      </UiFormField>
     </template>
 
     <template v-else>
-      <FormField label="Company Name" :error="errors.name">
-        <UiInput v-model="name" v-bind="nameAttrs" type="text" class="form-input" />
-      </FormField>
+      <UiFormField label="Company Name" :error="errors.name">
+        <input v-model="name" v-bind="nameAttrs" type="text" class="form-input" />
+      </UiFormField>
     </template>
 
     <!-- Common Fields -->
-    <FormField label="Email Address" :error="errors.email">
-      <UiInput v-model="email" v-bind="emailAttrs" type="email" class="form-input" />
-    </FormField>
+    <UiFormField label="Email Address" :error="errors.email">
+      <input v-model="email" v-bind="emailAttrs" type="email" class="form-input" />
+    </UiFormField>
 
-    <FormField label="Phone Number" :error="errors.phoneNumber">
-      <UiInput v-model="phoneNumber" v-bind="phoneNumberAttrs" type="tel" class="form-input" />
-    </FormField>
+    <UiFormField label="Phone Number" :error="errors.phoneNumber">
+      <input v-model="phoneNumber" v-bind="phoneNumberAttrs" type="tel" class="form-input" />
+    </UiFormField>
 
     <!-- Password Fields -->
-    <FormField label="Password" :error="errors.password">
+    <UiFormField label="Password" :error="errors.password">
       <div class="relative">
-        <UiInput
+        <input
           v-model="password"
           v-bind="passwordAttrs"
           :type="showPassword ? 'text' : 'password'"
@@ -219,11 +229,11 @@ const onSubmit = async (formData) => {
           <component :is="showPassword ? EyeOff : Eye" class="h-4 w-4 text-orange-500" />
         </button>
       </div>
-    </FormField>
+    </UiFormField>
 
-    <FormField label="Confirm Password" :error="errors.password">
+    <UiFormField label="Confirm Password" :error="errors.password">
       <div class="relative">
-        <UiInput
+        <input
           v-model="password_confirmation"
           v-bind="passwordConfirmationAttrs"
           :type="showPassword ? 'text' : 'password'"
@@ -237,23 +247,23 @@ const onSubmit = async (formData) => {
           <component :is="showPassword ? EyeOff : Eye" class="h-4 w-4 text-orange-500" />
         </button>
       </div>
-    </FormField>
+    </UiFormField>
 
 
     <!-- Location -->
-    <FormField label="Region" :error="errors['address.region']">
+    <UiFormField label="Region" :error="errors['address.region']">
       <UiSelect v-model="region" v-bind="regionAttrs">
           <UiSelectTrigger>
             <UiSelectValue placeholder="Select Region" /></UiSelectTrigger>
          <UiSelectContent>
-          <UiSelectItem v-for="option in [{ label: 'Nairobi', value: 'nairobi' }, { label: 'Mombasa', value: 'mombasa' }]" :key="option.value" :value="option.value">
+          <UiSelectItem v-for="option in regions" :key="option.value" :value="option.value">
             {{ option.label }}
           </UiSelectItem>
          </UiSelectContent>
       </UiSelect>
-    </FormField>
+    </UiFormField>
 
-    <FormField label="City" :error="errors['address.city']">
+    <UiFormField label="City" :error="errors['address.city']">
       <UiSelect v-model="city" v-bind="cityAttrs" >
       <UiSelectTrigger>
         <UiSelectValue placeholder="Select City" />
@@ -268,9 +278,9 @@ const onSubmit = async (formData) => {
         </UiSelectItem>
       </UiSelectContent>
     </UiSelect>
-    </FormField>
+    </UiFormField>
 
-    <FormField label="Subcity" :error="errors['address.subcity']">
+    <UiFormField label="Subcity" :error="errors['address.subcity']">
       <UiSelect v-model="subcity" v-bind="subcityAttrs" :disabled="!region">
       <UiSelectTrigger>
         <UiSelectValue placeholder="Select Subcity" />
@@ -285,9 +295,9 @@ const onSubmit = async (formData) => {
         </UiSelectItem>
       </UiSelectContent>
     </UiSelect>
-    </FormField>
+    </UiFormField>
 
-    <FormField label="Area" :error="errors['address.specificArea']">
+    <UiFormField label="Area" :error="errors['address.specificArea']">
       <UiSelect v-model="specificArea" v-bind="specificAreaAttrs" :disabled="!subcity">
       <UiSelectTrigger>
         <UiSelectValue placeholder="Select Area" />
@@ -302,12 +312,12 @@ const onSubmit = async (formData) => {
         </UiSelectItem>
       </UiSelectContent>
     </UiSelect>
-    </FormField>
+    </UiFormField>
 
    
 
     <!-- Terms -->
-    <FormField :error="errors.agreeToTerms">
+    <UiFormField :error="errors.agreeToTerms">
       <div class="flex justify-start items-start space-x-1">
         <input
           id="terms"
@@ -322,7 +332,7 @@ const onSubmit = async (formData) => {
           <NuxtLink to="/terms" class="text-orange-500 hover:underline">Terms & Conditions</NuxtLink>
         </label>
       </div>
-    </FormField>
+    </UiFormField>
 
     <!-- Submit -->
     <Button type="submit" :disabled="isSubmitting" class="w-full py-3 rounded-xl text-base font-semibold">

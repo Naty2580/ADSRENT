@@ -1,13 +1,14 @@
-<template>
-  <h2
-    data-slot="dialog-title"
-    class="text-lg font-semibold leading-none"
-    :class="className"
-  >
-    <slot />
-  </h2>
-</template>
-
+<!-- src/components/ui/dialog/DialogTitle.vue -->
 <script setup>
-defineProps({ className: String })
+import { DialogTitle } from 'radix-vue';
+import { cn } from '../utils';
+const props = defineProps({
+  class: String,
+});
 </script>
+
+<template>
+  <DialogTitle :class="cn('text-lg leading-none font-semibold', props.class)">
+    <slot />
+  </DialogTitle>
+</template>

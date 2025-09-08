@@ -1,16 +1,9 @@
-<template>
-  <div
-    data-slot="collapsible-content"
-    v-show="open"
-    :class="className"
-  >
-    <slot />
-  </div>
-</template>
-
+<!-- File: src/components/ui/collapsible/CollapsibleContent.vue -->
 <script setup>
-defineProps({
-  open: Boolean,
-  className: String,
-})
+import { CollapsibleContent } from 'radix-vue';
 </script>
+<template>
+  <CollapsibleContent>
+    <slot />
+  </CollapsibleContent>
+</template>

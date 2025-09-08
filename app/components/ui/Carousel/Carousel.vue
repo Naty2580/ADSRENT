@@ -1,82 +1,52 @@
-<template>
-  <div
-    ref="viewport"
-    class="relative"
-    role="region"
-    aria-roledescription="carousel"
-    @keydown.capture="handleKeyDown"
-    data-slot="carousel"
-  >
-    <slot />
-  </div>
-</template>
+<script setup lang="ts">
+import type { CarouselEmits, CarouselProps, WithClassAsProps } from './interface'
+import { cn } from '~/lib/utils'
+import { useProvideCarousel } from './useCarousel'
 
-<script setup>
-import { ref, provide, onMounted, onUnmounted, watch } from 'vue'
-import useEmblaCarousel from 'embla-carousel-vue'
-
-const props = defineProps({
-  opts: Object,
-  plugins: Array,
-  orientation: {
-    type: String,
-    default: 'horizontal',
-  },
+const props = withDefaults(defineProps<CarouselProps & WithClassAsProps>(), {
+  orientation: 'horizontal',
 })
 
-const viewport = ref(null)
-const [emblaRef, emblaApi] = useEmblaCarousel({
-  axis: props.orientation === 'horizontal' ? 'x' : 'y',
-  ...props.opts,
-}, props.plugins)
+const emits = defineEmits<CarouselEmits>()
 
-const canScrollPrev = ref(false)
-const canScrollNext = ref(false)
+const { canScrollNext, canScrollPrev, carouselApi, carouselRef, orientation, scrollNext, scrollPrev } = useProvideCarousel(props, emits)
 
-function updateScrollState() {
-  if (!emblaApi.value) return
-  canScrollPrev.value = emblaApi.value.canScrollPrev()
-  canScrollNext.value = emblaApi.value.canScrollNext()
-}
+defineExpose({
+  canScrollNext,
+  canScrollPrev,
+  carouselApi,
+  carouselRef,
+  orientation,
+  scrollNext,
+  scrollPrev,
+})
 
-function scrollPrev() {
-  emblaApi.value?.scrollPrev()
-}
+function onKeyDown(event: KeyboardEvent) {
+  const prevKey = props.orientation === 'vertical' ? 'ArrowUp' : 'ArrowLeft'
+  const nextKey = props.orientation === 'vertical' ? 'ArrowDown' : 'ArrowRight'
 
-function scrollNext() {
-  emblaApi.value?.scrollNext()
-}
-
-function handleKeyDown(e) {
-  if (e.key === 'ArrowLeft') {
-    e.preventDefault()
+  if (event.key === prevKey) {
+    event.preventDefault()
     scrollPrev()
-  } else if (e.key === 'ArrowRight') {
-    e.preventDefault()
+
+    return
+  }
+
+  if (event.key === nextKey) {
+    event.preventDefault()
     scrollNext()
   }
 }
-
-onMounted(() => {
-  watch(emblaApi, (api) => {
-    if (!api) return
-    updateScrollState()
-    api.on('select', updateScrollState)
-    api.on('reInit', updateScrollState)
-  })
-})
-
-onUnmounted(() => {
-  emblaApi.value?.off('select', updateScrollState)
-})
-
-provide('carousel', {
-  emblaRef,
-  emblaApi,
-  scrollPrev,
-  scrollNext,
-  canScrollPrev,
-  canScrollNext,
-  orientation: props.orientation,
-})
 </script>
+
+<template>
+  <div
+    :class="cn('relative', props.class)"
+    role="region"
+    aria-roledescription="carousel"
+    tabindex="0"
+    @keydown="onKeyDown"
+  >
+    <slot :can-scroll-next :can-scroll-prev :carousel-api :carousel-ref :orientation :scroll-next :scroll-prev />
+  </div>
+</template>

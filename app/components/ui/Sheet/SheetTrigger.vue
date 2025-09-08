@@ -1,9 +1,13 @@
-<script setup lang="ts">
-const toggleSheet = inject('toggleSheet') as (val: boolean) => void
+<!-- src/components/ui/sheet/SheetTrigger.vue -->
+<script setup>
+import { DialogTrigger } from 'radix-vue';
+import Primitive from '../Primitive.vue';
 </script>
 
 <template>
-  <button data-slot="sheet-trigger" @click="toggleSheet(true)">
-    <slot />
-  </button>
+  <DialogTrigger as-child>
+    <Primitive as="button">
+      <slot />
+    </Primitive>
+  </DialogTrigger>
 </template>

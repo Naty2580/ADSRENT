@@ -19,6 +19,7 @@ const { data: property, pending, error } = await useAsyncData(
     const { $api } = useNuxtApp();
     // This endpoint must be protected to ensure a user can only fetch their own property
     return $api.get(`/lessor/properties/${propertyId}`);
+    
   }
 );
 

@@ -1,5 +1,12 @@
+<script setup lang="ts">
+import type { MenubarMenuProps } from 'reka-ui'
+import { MenubarMenu } from 'reka-ui'
+
+const props = defineProps<MenubarMenuProps>()
+</script>
+
 <template>
-  <div data-slot="menubar-menu">
+  <MenubarMenu v-bind="props">
     <slot />
-  </div>
+  </MenubarMenu>
 </template>

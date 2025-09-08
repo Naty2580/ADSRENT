@@ -3,7 +3,6 @@ import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { inquirySchema } from '~/utils/schemas';
 import { useAuthStore } from '~/stores/auth';
-import FormField from '~/components/ui/FormField.vue';
 import Button from '~/components/ui/Button.vue';
 
 const props = defineProps({
@@ -27,8 +26,7 @@ const onSubmit = handleSubmit(async (values) => {
     apiMessage.value = null;
     const { $api } = useNuxtApp();
     try {
-        await $api.post('/bookings', {
-            property_id: props.propertyId,
+        await $api.post(`/properties/${props.propertyId}/book`, {
             message: values.message,
         });
         messageType.value = 'success';
@@ -54,9 +52,9 @@ const onSubmit = handleSubmit(async (values) => {
        <div v-if="apiMessage" :class="['rounded-md p-3 text-sm', messageType === 'success' ? 'bg-accent/10 text-accent-foreground' : 'bg-destructive/10 text-destructive']">
             {{ apiMessage }}
         </div>
-       <FormField label="Your Message" :error="errors.message">
+       <UiFormField label="Your Message" :error="errors.message">
           <textarea v-model="message" v-bind="messageAttrs" rows="5" class="w-full form-input"></textarea>
-       </FormField>
+       </UiFormField>
        <Button type="submit" :disabled="isSubmitting" class="w-full">
             <span v-if="isSubmitting">Sending...</span>
             <span v-else>Send Inquiry</span>

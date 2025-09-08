@@ -7,7 +7,7 @@ import '~/types/api.js';
  * but the token remains the primary source of truth for auth state.
  * @returns {User | null}
  */
-const getStoredUser = () => {
+export const getStoredUser = () => {
   if (import.meta.client) {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
@@ -21,7 +21,7 @@ const getStoredUser = () => {
  * We'll use localStorage for simplicity, but a secure cookie is a good future enhancement.
  * @returns {string | null}
  */
-const getStoredToken = () => {
+export const getStoredToken = () => {
   if (import.meta.client) {
     return localStorage.getItem('token');
   }
@@ -51,14 +51,14 @@ export const useAuthStore = defineStore('auth', {
     isAdmin: (state) => state.user?.roles?.includes('admin') || false,
 
     /** @returns {boolean} */
-    isLessor: (state) => state.user?.roles?.includes('lessor') || false,
+    isLessor: (state) => state.user?.roles?.includes('lister') || false,
   },
 
   actions: {
 
     initialize() {
       if (this.isInitialized) return;
-
+ 
       if (import.meta.client) {
           this.token = localStorage.getItem('token');
           const storedUser = localStorage.getItem('user');
@@ -112,8 +112,8 @@ export const useAuthStore = defineStore('auth', {
       const { $api } = useNuxtApp();
       try {
         // We will implement the 'me' endpoint as recommended.
-        const user = await $api.get('/me');
-        this._setUser(user);
+        const user = await $api.get('/user');
+        this._setUser(user.data);
       } catch (error) {
         console.error('Failed to fetch user:', error);
         // If we get a 401, it means the token is invalid. Log out.

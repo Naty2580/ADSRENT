@@ -1,13 +1,10 @@
-<script setup lang="ts">
-import { ref, provide } from 'vue'
-
-const isOpen = ref(false)
-provide('sheetOpen', isOpen)
-provide('toggleSheet', (val: boolean) => (isOpen.value = val))
+<!-- src/components/ui/sheet/Sheet.vue -->
+<script setup>
+import { DialogRoot } from 'radix-vue';
 </script>
 
 <template>
-  <div data-slot="sheet">
+  <DialogRoot>
     <slot />
-  </div>
+  </DialogRoot>
 </template>

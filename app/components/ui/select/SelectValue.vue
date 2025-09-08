@@ -3,7 +3,7 @@
 import { SelectValue } from 'radix-vue';
 </script>
 <template>
-  <SelectValue v-bind="$attrs">
+  <SelectValue>
     <slot />
   </SelectValue>
 </template>

@@ -1,12 +1,16 @@
-<template>
-  <slot
-    :id="name"
-    :aria-invalid="!!error"
-    :aria-describedby="error ? `${name}-desc ${name}-msg` : `${name}-desc`"
-  />
-</template>
+<script lang="ts" setup>
+import { Slot } from 'reka-ui'
+import { useFormField } from './useFormField'
 
-<script setup>
-import { useFormField } from  '@/components/ui/useFormField.ts'
-const { name, error } = useFormField()
+const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 </script>
+
+<template>
+  <Slot
+    :id="formItemId"
+    :aria-describedby="!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`"
+    :aria-invalid="!!error"
+  >
+    <slot />
+  </Slot>
+</template>

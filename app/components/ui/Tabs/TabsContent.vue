@@ -1,20 +1,19 @@
-<script setup lang="ts">
-import { TabsContent } from '@radix-vue/tabs'
-import { cn } from '@/lib/utils'
+<script setup>
+import { TabsContent } from 'radix-vue';
+import { cn } from '../utils';
 
-const props = defineProps<{
-  value: string
-  class?: string
-  forceMount?: boolean
-}>()
+// --- FIX: Add the 'value' prop ---
+// This is essential for the component to know when to be visible.
+const props = defineProps({
+  class: String,
+  value: String, // The value of the tab it belongs to
+});
 </script>
 
 <template>
-  <TabsContent
+  <TabsContent 
     :value="props.value"
-    :force-mount="props.forceMount"
     :class="cn('flex-1 outline-none', props.class)"
-    data-slot="tabs-content"
   >
     <slot />
   </TabsContent>

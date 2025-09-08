@@ -4,7 +4,6 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { updateProfileSchema } from '~/utils/schemas';
 import { useAuthStore } from '~/stores/auth';
 import Button from '~/components/ui/Button.vue';
-import FormField from '~/components/ui/FormField.vue';
 
 const authStore = useAuthStore();
 const user = authStore.user;
@@ -54,30 +53,30 @@ const onSubmit = handleSubmit(async (values) => {
     <div v-if="successMessage" class="rounded-md bg-accent/10 p-4 text-sm text-accent-foreground">{{ successMessage }}</div>
 
     <!-- Static Email Display -->
-    <FormField label="Email Address">
+    <UiFormField label="Email Address">
       <input type="email" :value="user.email" disabled class="w-full form-input bg-secondary/70 cursor-not-allowed" />
       <p class="mt-1 text-xs text-muted-foreground">Email address cannot be changed.</p>
-    </FormField>
+    </UiFormField>
     
     <!-- Editable Fields -->
-     <FormField :label="user.type === 'person' ? 'Full Name' : 'Company Name'" :error="errors.name">
+     <UiFormField :label="user.type === 'person' ? 'Full Name' : 'Company Name'" :error="errors.name">
         <input v-model="name" v-bind="nameAttrs" type="text" class="w-full form-input" />
-    </FormField>
+    </UiFormField>
 
-     <FormField label="Phone Number" :error="errors.phoneNumber">
+     <UiFormField label="Phone Number" :error="errors.phoneNumber">
         <input v-model="phoneNumber" v-bind="phoneNumberAttrs" type="tel" class="w-full form-input" />
-    </FormField>
+    </UiFormField>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <FormField label="Region" :error="errors['address.region']">
+      <UiFormField label="Region" :error="errors['address.region']">
         <input v-model="region" v-bind="regionAttrs" type="text" class="w-full form-input" />
-      </FormField>
-      <FormField label="City" :error="errors['address.city']">
+      </UiFormField>
+      <UiFormField label="City" :error="errors['address.city']">
         <input v-model="city" v-bind="cityAttrs" type="text" class="w-full form-input" />
-      </FormField>
-      <FormField label="Sub-City" :error="errors['address.subcity']">
+      </UiFormField>
+      <UiFormField label="Sub-City" :error="errors['address.subcity']">
         <input v-model="subcity" v-bind="subcityAttrs" type="text" class="w-full form-input" />
-      </FormField>
+      </UiFormField>
     </div>
     
     <div class="flex justify-end">

@@ -1,29 +1,19 @@
-<template>
-  <div data-slot="drawer">
-    <slot name="trigger" :open="open" @click="open = true" />
-    <teleport to="body">
-      <transition name="fade">
-        <div v-if="open" class="fixed inset-0 z-50">
-          <DrawerOverlay @click="open = false" />
-          <DrawerContent :direction="direction" @close="open = false">
-            <slot />
-          </DrawerContent>
-        </div>
-      </transition>
-    </teleport>
-  </div>
-</template>
+<script lang="ts" setup>
+import type { DrawerRootEmits, DrawerRootProps } from 'vaul-vue'
+import { useForwardPropsEmits } from 'reka-ui'
+import { DrawerRoot } from 'vaul-vue'
 
-<script setup>
-import { ref } from 'vue'
-import DrawerOverlay from './DrawerOverlay.vue'
-import DrawerContent from './DrawerContent.vue'
-
-const open = ref(false)
-defineProps({
-  direction: {
-    type: String,
-    default: 'bottom', // 'top' | 'bottom' | 'left' | 'right'
-  },
+const props = withDefaults(defineProps<DrawerRootProps>(), {
+  shouldScaleBackground: true,
 })
+
+const emits = defineEmits<DrawerRootEmits>()
+
+const forwarded = useForwardPropsEmits(props, emits)
 </script>
+
+<template>
+  <DrawerRoot v-bind="forwarded">
+    <slot />
+  </DrawerRoot>
+</template>

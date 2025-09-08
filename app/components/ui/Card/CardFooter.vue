@@ -1,15 +1,14 @@
+<!-- File: src/components/ui/card/CardFooter.vue -->
+<script setup>
+import { cn } from '../utils';
+
+const props = defineProps({
+  class: String,
+});
+</script>
+
 <template>
-  <div
-    data-slot="card-footer"
-    :class="['flex items-center px-6 pb-6 [.border-t]:pt-6', className]"
-    v-bind="attrs"
-  >
+  <div :class="cn('flex items-center p-6 pt-0', props.class)">
     <slot />
   </div>
 </template>
-
-<script setup>
-import { useAttrs } from 'vue'
-defineProps({ className: String })
-const attrs = useAttrs()
-</script>

@@ -1,27 +1,28 @@
+<script setup lang="ts">
+import type { MenubarSubTriggerProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { reactiveOmit } from '@vueuse/core'
+import { ChevronRight } from 'lucide-vue-next'
+import { MenubarSubTrigger, useForwardProps } from 'reka-ui'
+import { cn } from '~/lib/utils'
+
+const props = defineProps<MenubarSubTriggerProps & { class?: HTMLAttributes["class"], inset?: boolean }>()
+
+const delegatedProps = reactiveOmit(props, 'class')
+
+const forwardedProps = useForwardProps(delegatedProps)
+</script>
+
 <template>
-  <div
-    data-slot="menubar-sub-trigger"
-    :class="[
-      'flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none',
-      'focus:bg-accent focus:text-accent-foreground',
-      isOpen ? 'bg-accent text-accent-foreground' : '',
-      inset ? 'pl-8' : '',
-      className,
-    ]"
-    @click="$emit('toggle')"
+  <MenubarSubTrigger
+    v-bind="forwardedProps"
+    :class="cn(
+      'flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+      inset && 'pl-8',
+      props.class,
+    )"
   >
     <slot />
-    <svg class="ml-auto h-4 w-4" viewBox="0 0 24 24" fill="none">
-      <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" />
-    </svg>
-  </div>
+    <ChevronRight class="ml-auto h-4 w-4" />
+  </MenubarSubTrigger>
 </template>
-
-<script setup>
-defineProps({
-  className: String,
-  inset: Boolean,
-  isOpen: Boolean,
-});
-defineEmits(['toggle']);
-</script>

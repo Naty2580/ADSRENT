@@ -9,7 +9,7 @@ const attrs = useAttrs()
 <template>
   <div
     data-slot="radio-group"
-    class="grid grid-cols-3 gap-2"
+    class="grid gap-3"
     :class="attrs.class"
     v-bind="attrs"
   >

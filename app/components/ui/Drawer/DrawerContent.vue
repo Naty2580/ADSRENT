@@ -1,38 +1,28 @@
-<template>
-  <div
-    data-slot="drawer-content"
-    :class="[
-      'group/drawer-content bg-background fixed z-50 flex flex-col h-auto',
-      directionClasses[direction],
-    ]"
-  >
-    <div
-      v-if="direction === 'bottom'"
-      class="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-[data-slot=drawer-content]:block"
-    />
-    <slot />
-    <button
-      data-slot="drawer-close"
-      class="absolute top-4 right-4 opacity-70 hover:opacity-100 transition-opacity"
-      @click="$emit('close')"
-    >
-      <span class="sr-only">Close</span>
-    </button>
-  </div>
-</template>
+<script lang="ts" setup>
+import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { useForwardPropsEmits } from 'reka-ui'
+import { DrawerContent, DrawerPortal } from 'vaul-vue'
+import { cn } from '~/lib/utils'
+import DrawerOverlay from './DrawerOverlay.vue'
 
-<script setup>
-defineProps({
-  direction: {
-    type: String,
-    default: 'bottom',
-  },
-})
+const props = defineProps<DialogContentProps & { class?: HTMLAttributes["class"] }>()
+const emits = defineEmits<DialogContentEmits>()
 
-const directionClasses = {
-  top: 'inset-x-0 top-0 mb-24 max-h-[80vh] rounded-b-lg border-b',
-  bottom: 'inset-x-0 bottom-0 mt-24 max-h-[80vh] rounded-t-lg border-t',
-  left: 'inset-y-0 left-0 w-3/4 sm:max-w-sm border-r',
-  right: 'inset-y-0 right-0 w-3/4 sm:max-w-sm border-l',
-}
+const forwarded = useForwardPropsEmits(props, emits)
 </script>
+
+<template>
+  <DrawerPortal>
+    <DrawerOverlay />
+    <DrawerContent
+      v-bind="forwarded" :class="cn(
+        'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background',
+        props.class,
+      )"
+    >
+      <div class="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+      <slot />
+    </DrawerContent>
+  </DrawerPortal>
+</template>

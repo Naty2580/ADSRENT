@@ -1,3 +1,12 @@
+<!-- src/components/ui/dropdown-menu/DropdownMenuSeparator.vue -->
+<script setup>
+import { DropdownMenuSeparator } from 'radix-vue';
+import { cn } from '../utils';
+const props = defineProps({
+  class: String,
+});
+</script>
+
 <template>
-  <div data-slot="dropdown-menu-separator" class="bg-border -mx-1 my-1 h-px" />
+  <DropdownMenuSeparator :class="cn('-mx-1 my-1 h-px bg-border', props.class)" />
 </template>

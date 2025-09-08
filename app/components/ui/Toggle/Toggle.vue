@@ -1,21 +1,35 @@
 <script setup lang="ts">
-import { ToggleRoot } from '@radix-vue/toggle'
-import { cn } from '@/lib/utils'
-import { toggleVariants } from './toggleVariants'
-import type { VariantProps } from 'class-variance-authority'
+import type { ToggleEmits, ToggleProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import type { ToggleVariants } from '.'
+import { reactiveOmit } from '@vueuse/core'
+import { Toggle, useForwardPropsEmits } from 'reka-ui'
+import { cn } from '~/lib/utils'
+import { toggleVariants } from '.'
 
-const props = defineProps<{
-  class?: string
-  variant?: VariantProps<typeof toggleVariants>['variant']
-  size?: VariantProps<typeof toggleVariants>['size']
-}>()
+const props = withDefaults(defineProps<ToggleProps & {
+  class?: HTMLAttributes["class"]
+  variant?: ToggleVariants["variant"]
+  size?: ToggleVariants["size"]
+}>(), {
+  variant: 'default',
+  size: 'default',
+  disabled: false,
+})
+
+const emits = defineEmits<ToggleEmits>()
+
+const delegatedProps = reactiveOmit(props, 'class', 'size', 'variant')
+
+const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
-  <ToggleRoot
-    data-slot="toggle"
-    :class="cn(toggleVariants({ variant: props.variant, size: props.size }), props.class)"
+  <Toggle
+    v-slot="slotProps"
+    v-bind="forwarded"
+    :class="cn(toggleVariants({ variant, size }), props.class)"
   >
-    <slot />
-  </ToggleRoot>
+    <slot v-bind="slotProps" />
+  </Toggle>
 </template>

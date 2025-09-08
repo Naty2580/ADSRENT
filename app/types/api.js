@@ -49,6 +49,9 @@
  * @property {string} name
  * @property {string} avatarUrl
  * @property {string} memberSince
+ * @property {'Agency' | 'Individual'} type // To show 'Agency' or 'Individual'
+ * @property {string} phone
+ * @property {string} emai
  */
 
 /**
@@ -57,7 +60,7 @@
  * @typedef {Object} Property
  * @property {number} id
  * @property {string} title
- * @property {string} description // Added for detail page
+ * @property {PropertyDescription} description // Added for detail page
  * @property {ListingType} listingType
  * @property {'active' | 'booked'} status // Simplified status for detail view
  * @property {Price} price
@@ -66,7 +69,8 @@
  * @property {number | null} bathrooms
  * @property {number} area // in square meters
  * @property {boolean} isFurnished // Added
- * @property {string[]} amenities // Added
+ * @property {string | undefined} furnished
+ * @property {Amenity[]} amenities // Added
  * @property {Lister} lister // Added full lister object
  * @property {Media[]} media // Full array of media
  * @property {string} postedAt
@@ -99,6 +103,28 @@
  * @typedef {Object} AuthResponse
  * @property {string} token
  * @property {User} user
+ */
+
+/**
+ * @typedef {Object} Amenity
+ * @property {string} name
+ * @property {boolean} available - To differentiate between available/unavailable
+ * @property {string | undefined} icon - Optional: emoji or icon name
+ */
+
+/**
+ * @typedef {Object} PropertyDescription
+ * @property {string} overview
+ * @property {string[]} locationAdvantages
+ * @property {string[]} roomDetails
+ * @property {string[]} utilities
+ */
+
+/**
+ * @typedef {Object} ApiCity
+ * @property {string} address_city
+ * @property {string} address_region
+ * @property {number} property_count
  */
 
 export {};

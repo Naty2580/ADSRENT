@@ -1,32 +1,22 @@
-<script setup>
-const props = defineProps({
-  isOpen: Boolean,
-})
+<script setup lang="ts">
+import type { AccordionContentProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { reactiveOmit } from '@vueuse/core'
+import { AccordionContent } from 'reka-ui'
+import { cn } from '~/lib/utils'
+
+const props = defineProps<AccordionContentProps & { class?: HTMLAttributes["class"] }>()
+
+const delegatedProps = reactiveOmit(props, 'class')
 </script>
 
 <template>
-  <transition name="accordion">
-    <div
-      v-if="isOpen"
-      data-slot="accordion-content"
-      class="overflow-hidden text-sm pt-0 pb-4"
-    >
+  <AccordionContent
+    v-bind="delegatedProps"
+    class="overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+  >
+    <div :class="cn('pb-4 pt-0', props.class)">
       <slot />
     </div>
-  </transition>
+  </AccordionContent>
 </template>
-
-<style>
-.accordion-enter-active,
-.accordion-leave-active {
-  transition: max-height 0.3s ease;
-}
-.accordion-enter-from,
-.accordion-leave-to {
-  max-height: 0;
-}
-.accordion-enter-to,
-.accordion-leave-from {
-  max-height: 500px;
-}
-</style>
